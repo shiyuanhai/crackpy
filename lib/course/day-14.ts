@@ -1,0 +1,213 @@
+import type { Day } from "../types";
+import { teach, exercise, quizMC, recall, checkpoint } from "./helpers";
+
+export const day14: Day = {
+  id: 14,
+  title: "Interview strategy — the capstone",
+  subtitle: "Pattern recognition, complexity talk, and a mock set that touches every topic from Days 1–13.",
+  estimatedTime: "70–90 min",
+  goals: [
+    "Recognize which pattern a problem asks for in under 60 seconds",
+    "State time and space complexity confidently",
+    "Walk through a problem out loud: clarify → plan → code → test",
+    "Finish the 14-day arc with a mock mini-set",
+  ],
+  youWillBuild: "A mixed mock: hash map, two pointers, BFS, DP, recursion — five problems, no warnings about which is which.",
+  steps: [
+    teach(
+      "d14-intro",
+      "<p>Today is a capstone — no new syntax, no new data structures. Instead: how to <em>attack</em> a problem you&apos;ve never seen before, and a mock set that blends everything.</p><p>The interview isn&apos;t about memorizing 150 LeetCode solutions. It&apos;s about having the right reflexes.</p>",
+    ),
+    teach(
+      "d14-patterns",
+      "<p><strong>The pattern cheat sheet.</strong> When you see a problem, match it to a pattern in under a minute:</p><ul><li><strong>Sorted array + target value</strong> → binary search (Day 10)</li><li><strong>&quot;Find pair/triplet that sums to X&quot;</strong> → hash map (Day 8) or two pointers on sorted (Day 7)</li><li><strong>&quot;Longest/shortest substring with property&quot;</strong> → sliding window (Day 7)</li><li><strong>&quot;Count/find anagrams, frequency-based&quot;</strong> → Counter / dict (Days 5, 8)</li><li><strong>Nested structure, next greater, matching brackets</strong> → stack (Day 9)</li><li><strong>Tree / level order / shortest path</strong> → BFS or DFS (Day 11)</li><li><strong>&quot;All combinations / permutations / subsets&quot;</strong> → backtracking (Day 12)</li><li><strong>&quot;Min/max cost to reach&quot;, &quot;number of ways&quot;, overlapping subproblems</strong> → DP (Day 13)</li></ul>",
+    ),
+    teach(
+      "d14-talk",
+      "<p><strong>How to talk through a problem.</strong> Four beats — don&apos;t skip any:</p><ol><li><strong>Clarify.</strong> Ask about constraints, edge cases, input types. <em>&quot;Can the array be empty? Are values negative? Is it sorted?&quot;</em></li><li><strong>Plan.</strong> State your approach and complexity <em>before</em> writing code. <em>&quot;I&apos;ll use a hash map to store seen values. O(n) time, O(n) space.&quot;</em></li><li><strong>Code.</strong> Narrate as you type. Use descriptive names.</li><li><strong>Test.</strong> Walk through a small example by hand. Then edge cases: empty, one element, duplicates, negatives.</li></ol><p>Interviewers want to hear your reasoning. Silence feels like you&apos;re stuck.</p>",
+    ),
+    recall(
+      "d14-recall-patterns",
+      "Name the pattern for: (a) &quot;longest substring without repeating characters&quot;; (b) &quot;min coins to make amount N&quot;; (c) &quot;number of islands in a grid&quot;; (d) &quot;valid parentheses&quot;.",
+      "(a) Sliding window + hash set — Day 7/8. (b) DP (unbounded knapsack flavor) — Day 13. (c) BFS or DFS on grid — Day 11 pattern. (d) Stack — Day 9.",
+    ),
+    checkpoint(
+      "d14-cp",
+      "Mock set begins",
+      "Five problems. Each a real mix — you decide the pattern. Read slowly, think before coding. This is your final exam.",
+    ),
+    exercise(
+      "d14-mock-1",
+      "<p><strong>Mock #1.</strong> <code>first_unique_char(s)</code> — return the index of the first non-repeating character in <code>s</code>, or <code>-1</code> if none. (LeetCode #387.)</p><p>Example: <code>&quot;leetcode&quot;</code> → 0. <code>&quot;loveleetcode&quot;</code> → 2. <code>&quot;aabb&quot;</code> → -1.</p>",
+      "def first_unique_char(s):\n    # your code here\n    pass\n",
+      "def first_unique_char(s):\n    from collections import Counter\n    counts = Counter(s)\n    for i, ch in enumerate(s):\n        if counts[ch] == 1:\n            return i\n    return -1\n",
+      "Two passes: <code>Counter(s)</code> to get frequencies, then linear scan for the first count-1 char. O(n) time, O(1) extra space (26 letters max).",
+      [
+        { call: 'first_unique_char("leetcode")', expected: 0 },
+        { call: 'first_unique_char("loveleetcode")', expected: 2 },
+        { call: 'first_unique_char("aabb")', expected: -1 },
+        { call: 'first_unique_char("z")', expected: 0 },
+        { call: 'first_unique_char("")', expected: -1 },
+      ],
+      { fnName: "first_unique_char" },
+    ),
+    exercise(
+      "d14-mock-2",
+      "<p><strong>Mock #2.</strong> <code>move_zeroes(nums)</code> — move all zeros to the end of <code>nums</code> <em>in place</em>, preserving the relative order of non-zero elements. Return the modified list. (LeetCode #283.)</p><p>Example: <code>[0,1,0,3,12]</code> → <code>[1,3,12,0,0]</code>.</p>",
+      "def move_zeroes(nums):\n    # your code here\n    pass\n",
+      "def move_zeroes(nums):\n    write = 0\n    for read in range(len(nums)):\n        if nums[read] != 0:\n            nums[write], nums[read] = nums[read], nums[write]\n            write += 1\n    return nums\n",
+      "Two-pointer in place: <code>write</code> marks the next slot for a non-zero; <code>read</code> scans. Swap when <code>read</code> is non-zero. O(n) time, O(1) space.",
+      [
+        { call: "move_zeroes([0, 1, 0, 3, 12])", expected: [1, 3, 12, 0, 0] },
+        { call: "move_zeroes([0])", expected: [0] },
+        { call: "move_zeroes([1, 2, 3])", expected: [1, 2, 3] },
+        { call: "move_zeroes([0, 0, 1])", expected: [1, 0, 0] },
+        { call: "move_zeroes([])", expected: [] },
+      ],
+      { fnName: "move_zeroes" },
+    ),
+    exercise(
+      "d14-mock-3",
+      "<p><strong>Mock #3.</strong> <code>num_islands(grid)</code> — given a 2D grid of <code>&quot;1&quot;</code> (land) and <code>&quot;0&quot;</code> (water), count the number of islands. An island is a group of 1&apos;s connected horizontally or vertically. (LeetCode #200.)</p>",
+      "def num_islands(grid):\n    # your code here\n    pass\n",
+      'def num_islands(grid):\n    if not grid or not grid[0]:\n        return 0\n    rows, cols = len(grid), len(grid[0])\n    count = 0\n    def sink(r, c):\n        if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] != "1":\n            return\n        grid[r][c] = "0"\n        sink(r + 1, c); sink(r - 1, c); sink(r, c + 1); sink(r, c - 1)\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == "1":\n                count += 1\n                sink(r, c)\n    return count\n',
+      "DFS flood-fill: scan every cell. When you find a <code>&quot;1&quot;</code>, increment the counter and sink the whole connected island to <code>&quot;0&quot;</code>. O(rows × cols) time.",
+      [
+        {
+          call:
+            'num_islands([["1","1","0"],["1","0","0"],["0","0","1"]])',
+          expected: 2,
+        },
+        {
+          call: 'num_islands([["1","1","1"],["1","1","1"]])',
+          expected: 1,
+        },
+        { call: "num_islands([])", expected: 0 },
+        {
+          call: 'num_islands([["0","0"],["0","0"]])',
+          expected: 0,
+        },
+      ],
+      { fnName: "num_islands" },
+    ),
+    exercise(
+      "d14-mock-4",
+      "<p><strong>Mock #4.</strong> <code>longest_unique(s)</code> — return the length of the longest substring of <code>s</code> without repeating characters. (LeetCode #3.)</p><p>Example: <code>&quot;abcabcbb&quot;</code> → 3 (<code>&quot;abc&quot;</code>). <code>&quot;bbbbb&quot;</code> → 1.</p>",
+      "def longest_unique(s):\n    # your code here\n    pass\n",
+      "def longest_unique(s):\n    seen = {}\n    left = 0\n    best = 0\n    for right, ch in enumerate(s):\n        if ch in seen and seen[ch] >= left:\n            left = seen[ch] + 1\n        seen[ch] = right\n        best = max(best, right - left + 1)\n    return best\n",
+      "Sliding window with a dict mapping char → last seen index. When a repeat lands inside the window, advance <code>left</code> past the previous occurrence. O(n).",
+      [
+        { call: 'longest_unique("abcabcbb")', expected: 3 },
+        { call: 'longest_unique("bbbbb")', expected: 1 },
+        { call: 'longest_unique("pwwkew")', expected: 3 },
+        { call: 'longest_unique("")', expected: 0 },
+        { call: 'longest_unique("abcdef")', expected: 6 },
+      ],
+      { fnName: "longest_unique" },
+    ),
+    exercise(
+      "d14-mock-5",
+      "<p><strong>Mock #5.</strong> <code>min_cost_climb(cost)</code> — given a list of costs where <code>cost[i]</code> is the cost of step <code>i</code>, you can start at index 0 or 1 and at each step take 1 or 2 steps up. Return the min cost to reach <em>past</em> the last step (i.e., index <code>len(cost)</code>). (LeetCode #746.)</p><p>Example: <code>[10, 15, 20]</code> → 15 (start at index 1, jump two past the top).</p>",
+      "def min_cost_climb(cost):\n    # your code here\n    pass\n",
+      "def min_cost_climb(cost):\n    n = len(cost)\n    prev2, prev1 = 0, 0\n    for i in range(2, n + 1):\n        cur = min(prev1 + cost[i - 1], prev2 + cost[i - 2])\n        prev2, prev1 = prev1, cur\n    return prev1\n",
+      "DP. <code>dp[i]</code> = min cost to reach index <code>i</code>. <code>dp[i] = min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2])</code>. Final answer: <code>dp[n]</code>. Rolling variables → O(1) space.",
+      [
+        { call: "min_cost_climb([10, 15, 20])", expected: 15 },
+        { call: "min_cost_climb([1, 100, 1, 1, 1, 100, 1, 1, 100, 1])", expected: 6 },
+        { call: "min_cost_climb([0, 0])", expected: 0 },
+        { call: "min_cost_climb([5, 5])", expected: 5 },
+      ],
+      { fnName: "min_cost_climb" },
+    ),
+    quizMC(
+      "d14-q-complexity",
+      "A hash map lookup is amortized O(1). When could it degrade to O(n)?",
+      [
+        "Never — hash maps are always O(1)",
+        "When all keys hash to the same bucket — worst-case collision",
+        "When the map has more than 1,000 entries",
+        "When keys are strings instead of integers",
+      ],
+      1,
+      "Hash maps depend on a good hash function. If every key collides, every lookup walks a chain of <code>n</code> entries. In practice Python&apos;s hash is strong enough that this doesn&apos;t happen — but it&apos;s worth knowing.",
+    ),
+    recall(
+      "d14-recall-talk",
+      "An interviewer gives you a problem. What are the four beats you should hit before declaring &quot;done&quot;?",
+      "(1) Clarify — ask about constraints and edge cases. (2) Plan — state approach and complexity before coding. (3) Code — narrate as you type. (4) Test — trace through an example and edge cases out loud.",
+    ),
+    teach(
+      "d14-wrap",
+      "<p>You made it.</p><p>Over 14 days you built up: fundamentals → strings → lists → loops → dicts/sets → functions → two pointers → hash maps → stacks/queues → binary search → trees → recursion → DP → strategy.</p><p>That&apos;s enough to attack 80% of coding interview problems with confidence. The remaining 20% is volume — grind a handful of LeetCode mediums a week and keep the pattern cheat sheet from today in your back pocket.</p><p>Good luck. Go crack it.</p>",
+    ),
+  ],
+  finalTest: [
+    exercise(
+      "d14-t-longest-palindrome",
+      "<p>Write <code>longest_palindrome_len(s)</code> — return the length of the longest palindrome that can be <em>built</em> using the characters of <code>s</code>. (LeetCode #409.)</p><p>Example: <code>&quot;abccccdd&quot;</code> → 7 (e.g., <code>&quot;dccaccd&quot;</code>).</p>",
+      "def longest_palindrome_len(s):\n    # your code here\n    pass\n",
+      "def longest_palindrome_len(s):\n    from collections import Counter\n    counts = Counter(s)\n    total = 0\n    has_odd = False\n    for c in counts.values():\n        total += (c // 2) * 2\n        if c % 2 == 1:\n            has_odd = True\n    return total + (1 if has_odd else 0)\n",
+      "Every pair of a character contributes 2 to the palindrome. If any character has an odd count, one of them can sit in the middle.",
+      [
+        { call: 'longest_palindrome_len("abccccdd")', expected: 7 },
+        { call: 'longest_palindrome_len("a")', expected: 1 },
+        { call: 'longest_palindrome_len("bb")', expected: 2 },
+        { call: 'longest_palindrome_len("")', expected: 0 },
+        { call: 'longest_palindrome_len("abc")', expected: 1 },
+      ],
+      { fnName: "longest_palindrome_len" },
+    ),
+    quizMC(
+      "d14-t-pattern",
+      "You see: <em>&quot;Given a rotated sorted array, find the index of target in O(log n).&quot;</em> Which pattern?",
+      [
+        "Two pointers",
+        "Modified binary search",
+        "Sliding window",
+        "Backtracking",
+      ],
+      1,
+      "The &quot;sorted&quot; and &quot;O(log n)&quot; signals scream binary search. The twist is handling the rotation — one half is always sorted; you decide which half to search.",
+    ),
+    exercise(
+      "d14-t-climb-ways",
+      "<p>Write <code>climb_ways(n, steps)</code> — number of distinct ways to climb to step <code>n</code> if at each move you can take any value from <code>steps</code> (a list of positive ints).</p><p>Example: <code>climb_ways(4, [1, 2])</code> → 5 (the Fibonacci-style count).</p>",
+      "def climb_ways(n, steps):\n    # your code here\n    pass\n",
+      "def climb_ways(n, steps):\n    dp = [0] * (n + 1)\n    dp[0] = 1\n    for i in range(1, n + 1):\n        for s in steps:\n            if i - s >= 0:\n                dp[i] += dp[i - s]\n    return dp[n]\n",
+      "Generalized climb-stairs. <code>dp[i] = sum(dp[i - s] for s in steps if i - s &gt;= 0)</code>. Base: <code>dp[0] = 1</code>.",
+      [
+        { call: "climb_ways(4, [1, 2])", expected: 5 },
+        { call: "climb_ways(0, [1, 2])", expected: 1 },
+        { call: "climb_ways(3, [1, 3])", expected: 2 },
+        { call: "climb_ways(5, [1, 2, 3])", expected: 13 },
+      ],
+      { fnName: "climb_ways" },
+    ),
+    exercise(
+      "d14-t-majority",
+      "<p><strong>LeetCode #169 — Majority Element.</strong> Given a list where one element appears more than <code>n/2</code> times, return it. O(n) time, O(1) extra space. (Hint: Boyer-Moore voting.)</p>",
+      "def majority(nums):\n    # your code here\n    pass\n",
+      "def majority(nums):\n    candidate = None\n    count = 0\n    for x in nums:\n        if count == 0:\n            candidate = x\n        count += 1 if x == candidate else -1\n    return candidate\n",
+      "Boyer-Moore majority vote. Cancel pairs of different elements; the majority element survives because there are more of it than everything else combined.",
+      [
+        { call: "majority([3, 2, 3])", expected: 3 },
+        { call: "majority([2, 2, 1, 1, 1, 2, 2])", expected: 2 },
+        { call: "majority([1])", expected: 1 },
+        { call: "majority([5, 5, 5, 2, 5])", expected: 5 },
+      ],
+      { fnName: "majority" },
+    ),
+    quizMC(
+      "d14-t-talk",
+      "Your interviewer gives you a problem. What should you do <em>before</em> typing any code?",
+      [
+        "Start coding immediately to show confidence",
+        "Clarify constraints and state your plan + complexity",
+        "Ask for the optimal solution",
+        "Write tests first",
+      ],
+      1,
+      "Clarify + plan. Jumping into code looks fast but often ends in a rewrite. A 60-second plan saves 10 minutes of backtracking.",
+    ),
+  ],
+};

@@ -96,3 +96,76 @@ export function PyLogo(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function NotesIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden
+      {...props}
+    >
+      <path d="M4 3h9l3 3v11a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" strokeLinejoin="round" />
+      <path d="M13 3v4h3M6 10h8M6 13h8M6 16h5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function ArrowRight(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      aria-hidden
+      {...props}
+    >
+      <path d="M4 10h12M11 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function RestartIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      aria-hidden
+      {...props}
+    >
+      <path
+        d="M16 10a6 6 0 11-2-4.5M16 3v3h-3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function CloseIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      aria-hidden
+      {...props}
+    >
+      <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
+    </svg>
+  );
+}

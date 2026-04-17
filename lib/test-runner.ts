@@ -1,5 +1,5 @@
 import { runPython } from "./pyodide";
-import type { Problem, TestResult } from "./types";
+import type { ExerciseStep, TestResult } from "./types";
 
 export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
@@ -22,16 +22,16 @@ export function deepEqual(a: unknown, b: unknown): boolean {
   return false;
 }
 
-export async function runTests(
-  problem: Problem,
+export async function runExerciseTests(
+  step: ExerciseStep,
   userCode: string,
 ): Promise<{ results: TestResult[]; allPassed: boolean }> {
-  if (!problem.tests || problem.tests.length === 0) {
+  if (!step.tests || step.tests.length === 0) {
     return { results: [], allPassed: false };
   }
   const results: TestResult[] = [];
   let passed = 0;
-  for (const t of problem.tests) {
+  for (const t of step.tests) {
     const pyCode = `
 ${userCode}
 import json as _j
@@ -57,5 +57,5 @@ print("::TESTRESULT::" + _j.dumps(_actual, default=str))
     if (pass) passed++;
     results.push({ call: t.call, expected: t.expected, actual, pass, errorMsg });
   }
-  return { results, allPassed: passed === problem.tests.length };
+  return { results, allPassed: passed === step.tests.length };
 }

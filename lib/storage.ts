@@ -1,11 +1,11 @@
-import type { AppState } from "./types";
+import type { AppState, DayProgress } from "./types";
+import { emptyDayProgress } from "./types";
 
-const STORAGE_KEY = "crackpy_v1";
+const STORAGE_KEY = "crackpy_v2";
 
 const initialState: AppState = {
   currentDay: 1,
   progress: {},
-  savedCode: {},
 };
 
 export function loadState(): AppState {
@@ -17,7 +17,6 @@ export function loadState(): AppState {
     return {
       currentDay: parsed.currentDay ?? 1,
       progress: parsed.progress ?? {},
-      savedCode: parsed.savedCode ?? {},
     };
   } catch {
     return initialState;
@@ -37,5 +36,13 @@ export function clearState(): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem("crackpy_v1");
   } catch {}
+}
+
+export function getOrInitProgress(
+  state: AppState,
+  dayId: number,
+): DayProgress {
+  return state.progress[dayId] ?? emptyDayProgress();
 }

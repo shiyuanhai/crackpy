@@ -12,17 +12,12 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ course, currentDay, state, onSelect, onReset }: SidebarProps) {
-  const total = course.reduce((s, d) => s + d.problems.length, 0);
-  const done = course.reduce((s, d) => s + (state.progress[d.id]?.solved.length ?? 0), 0);
+  const total = course.length;
+  const done = course.filter((d) => state.progress[d.id]?.testPassed).length;
   const pct = total ? Math.round((done / total) * 100) : 0;
 
-  function isDayComplete(day: Day) {
-    const solved = state.progress[day.id]?.solved ?? [];
-    return day.problems.every((p) => solved.includes(p.id));
-  }
-
   return (
-    <aside className="bg-white border-r border-border p-6 md:p-5 sticky top-0 md:h-screen md:overflow-y-auto flex flex-col">
+    <aside className="bg-white border-r border-border p-6 md:p-5 md:sticky md:top-0 md:h-screen md:overflow-y-auto flex flex-col">
       <div className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-indigo-400 flex items-center justify-center text-white shrink-0">
           <PyLogo />
@@ -33,7 +28,7 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
 
       <div className="bg-surface-soft border border-border rounded-lg p-3.5 my-6">
         <div className="flex justify-between items-center text-[12px] text-text-muted mb-2 uppercase tracking-wider font-semibold">
-          <span>Progress</span>
+          <span>Days complete</span>
           <span>
             {done}/{total}
           </span>
@@ -49,10 +44,12 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
       <div className="text-[11px] font-semibold text-text-subtle uppercase tracking-widest mx-2 mb-2">
         14-day plan
       </div>
-      <ul className="flex flex-col gap-0.5 flex-1 list-none p-0 m-0 md:block flex-row overflow-x-auto md:overflow-visible">
+      <ul className="flex flex-col gap-0.5 flex-1 list-none p-0 m-0">
         {course.map((day) => {
           const active = day.id === currentDay;
-          const complete = isDayComplete(day);
+          const p = state.progress[day.id];
+          const complete = Boolean(p?.testPassed);
+          const inProgress = !complete && Boolean(p?.started);
           return (
             <li key={day.id}>
               <button
@@ -70,12 +67,17 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
                       ? "bg-success text-white"
                       : active
                         ? "bg-primary text-white"
-                        : "bg-surface-soft text-text-muted"
+                        : inProgress
+                          ? "bg-primary-soft text-primary-hover border border-primary/30"
+                          : "bg-surface-soft text-text-muted"
                   }`}
                 >
                   {complete ? <CheckIcon /> : day.id}
                 </span>
                 <span className="flex-1 truncate">{day.title}</span>
+                {inProgress && !active && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-label="In progress" />
+                )}
               </button>
             </li>
           );
@@ -83,11 +85,11 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
       </ul>
 
       <div className="pt-4 mt-4 border-t border-border text-[12px] text-text-subtle flex justify-between items-center">
-        <span>Runs locally in your browser</span>
+        <span>Runs in your browser</span>
         <button
           type="button"
           onClick={onReset}
-          className="px-2 py-1 rounded text-text-muted hover:bg-surface-soft hover:text-danger transition-colors text-[12px] font-medium"
+          className="px-2 py-1 rounded text-text-muted hover:bg-surface-soft hover:text-danger transition-colors text-[12px] font-medium cursor-pointer"
           title="Reset all progress"
         >
           Reset
