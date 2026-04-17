@@ -50,6 +50,11 @@ export default function ExerciseBubble({
   function handleChange(v: string) {
     setCode(v);
     onCodeChange(v);
+    if (result || testResults) {
+      setResult(null);
+      setTestResults(null);
+      setAllPassed(false);
+    }
   }
 
   async function handleRun() {

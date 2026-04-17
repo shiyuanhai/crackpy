@@ -54,6 +54,7 @@ export default function DemoBubble({
   function handleChange(v: string) {
     setCode(v);
     onCodeChange(v);
+    if (result) setResult(null);
   }
 
   async function handleRun() {
@@ -75,7 +76,9 @@ export default function DemoBubble({
   const yourLines = code.split("\n").length;
   const progressChars = code.length;
   const targetChars = target.length;
-  const pct = targetChars ? Math.min(100, Math.round((progressChars / targetChars) * 100)) : 0;
+  const rawPct = targetChars ? Math.round((progressChars / targetChars) * 100) : 0;
+  // Cap at 99% unless the content actually matches — avoids misleading "100%" on typos.
+  const pct = matches ? 100 : Math.min(99, rawPct);
 
   return (
     <ChatBubble from="teacher">

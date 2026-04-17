@@ -71,9 +71,15 @@ export async function runPython(code: string): Promise<PyResult> {
     const stderr = pyodide.runPython("_get_stderr()") as string;
     return { stdout, stderr, ok: true };
   } catch (err: unknown) {
-    const stdout = (pyodide.runPython("_get_stdout()") as string) ?? "";
-    const message = err instanceof Error ? err.message : String(err);
-    return { stdout, stderr: message, ok: false };
+    let stdout = "";
+    try {
+      stdout = (pyodide.runPython("_get_stdout()") as string) ?? "";
+    } catch {
+      /* ignore — runtime may be in a bad state */
+    }
+    const rawMessage = err instanceof Error ? err.message : String(err);
+    const stderr = rawMessage && rawMessage.trim() ? rawMessage : "Unknown Python error";
+    return { stdout, stderr, ok: false };
   }
 }
 
