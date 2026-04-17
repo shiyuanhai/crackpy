@@ -25,7 +25,6 @@ interface Props {
 
 function requiresInteraction(step: LessonStep): boolean {
   return (
-    step.kind === "demo" ||
     step.kind === "exercise" ||
     step.kind === "quiz_mc" ||
     step.kind === "quiz_text" ||

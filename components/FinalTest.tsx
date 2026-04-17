@@ -29,7 +29,6 @@ function scorable(step: LessonStep): boolean {
 function currentNeedsInteraction(step: LessonStep | undefined): boolean {
   if (!step) return false;
   return (
-    step.kind === "demo" ||
     step.kind === "exercise" ||
     step.kind === "quiz_mc" ||
     step.kind === "quiz_text" ||

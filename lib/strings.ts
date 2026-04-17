@@ -68,7 +68,7 @@ const DICT = {
 
     // Demo / type-along step
     typeItOut: "Try it — type it out yourself",
-    typeTargetBelow: "Type the code above into the box below. When it matches, you're done.",
+    typeTargetBelow: "Type the code above into the box below to build muscle memory — you can continue anytime.",
     targetCode: "Target code",
     yourCode: "Your code",
     skipTyping: "Skip",
@@ -181,7 +181,7 @@ const DICT = {
     resetStarter: "恢复初始代码",
 
     typeItOut: "动手打一遍",
-    typeTargetBelow: "把上面的代码照着敲到下面的框里。输入一致就算完成。",
+    typeTargetBelow: "把上面的代码照着敲到下面的框里,加深肌肉记忆。不一致也能随时继续。",
     targetCode: "目标代码",
     yourCode: "你的代码",
     skipTyping: "跳过",
