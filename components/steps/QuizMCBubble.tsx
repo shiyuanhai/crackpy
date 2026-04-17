@@ -3,6 +3,8 @@
 import { useState } from "react";
 import ChatBubble from "../ChatBubble";
 import { CheckIcon } from "@/lib/icons";
+import { useLocale } from "@/lib/locale-context";
+import { tr } from "@/lib/i18n";
 import type { QuizMCStep } from "@/lib/types";
 
 interface Props {
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function QuizMCBubble({ step, selected, isComplete, onSelect, onComplete }: Props) {
+  const { locale, t } = useLocale();
   const [localPick, setLocalPick] = useState<number | undefined>(selected);
   const [submitted, setSubmitted] = useState<boolean>(selected !== undefined);
 
@@ -39,11 +42,11 @@ export default function QuizMCBubble({ step, selected, isComplete, onSelect, onC
       <div className="bg-surface border border-border rounded-2xl rounded-tl-sm shadow-soft overflow-hidden">
         <div className="px-4 py-3 border-b border-border">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-text-subtle mb-1.5">
-            Quick check
+            {t("quickCheck")}
           </div>
           <div
             className="text-[14.5px] leading-relaxed prose-concept"
-            dangerouslySetInnerHTML={{ __html: step.question }}
+            dangerouslySetInnerHTML={{ __html: tr(step.question, locale) }}
           />
         </div>
         <div className="p-3 flex flex-col gap-2">
@@ -69,7 +72,7 @@ export default function QuizMCBubble({ step, selected, isComplete, onSelect, onC
                 <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[11px] font-semibold shrink-0">
                   {String.fromCharCode(65 + i)}
                 </span>
-                <span className="flex-1" dangerouslySetInnerHTML={{ __html: opt }} />
+                <span className="flex-1" dangerouslySetInnerHTML={{ __html: tr(opt, locale) }} />
                 {submitted && isCorrect && <CheckIcon />}
               </button>
             );
@@ -83,7 +86,7 @@ export default function QuizMCBubble({ step, selected, isComplete, onSelect, onC
               disabled={localPick === undefined}
               className="px-4 py-1.5 rounded-md text-[13px] font-semibold bg-primary text-white hover:bg-primary-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
-              Submit
+              {t("submit")}
             </button>
           </div>
         )}
@@ -91,8 +94,8 @@ export default function QuizMCBubble({ step, selected, isComplete, onSelect, onC
           <div
             className={`px-4 py-3 border-t border-border text-[13.5px] leading-relaxed ${correct ? "bg-success-soft/50 text-text" : "bg-danger-soft/50 text-text"}`}
           >
-            <span className="font-semibold mr-1">{correct ? "Nice —" : "Not quite —"}</span>
-            <span dangerouslySetInnerHTML={{ __html: step.explanation }} />
+            <span className="font-semibold mr-1">{correct ? t("niceCorrect") : t("notQuite")}</span>
+            <span dangerouslySetInnerHTML={{ __html: tr(step.explanation, locale) }} />
           </div>
         )}
       </div>

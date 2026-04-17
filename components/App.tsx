@@ -11,12 +11,15 @@ import DayIntro from "./DayIntro";
 import LessonFlow from "./LessonFlow";
 import NotesPanel from "./NotesPanel";
 import LoadingOverlay from "./LoadingOverlay";
+import { useLocale } from "@/lib/locale-context";
+import { tr } from "@/lib/i18n";
 
 const DEFAULT_STATE: AppState = { currentDay: 1, progress: {} };
 
 type View = "intro" | "lesson";
 
 export default function App() {
+  const { locale, t } = useLocale();
   const [state, setState] = useState<AppState>(DEFAULT_STATE);
   const [hydrated, setHydrated] = useState(false);
   const [pyReady, setPyReady] = useState(false);
@@ -43,7 +46,7 @@ export default function App() {
       .catch((err) => {
         if (!cancelled) {
           console.error(err);
-          setPyError("Failed to load Python runtime. Check your connection and refresh.");
+          setPyError(t("pythonConnError"));
         }
       });
     return () => {
@@ -96,11 +99,11 @@ export default function App() {
   }, [currentDay.id, updateDayProgress]);
 
   const handleReset = useCallback(() => {
-    if (!confirm("Reset ALL progress, notes, and saved code? This cannot be undone.")) return;
+    if (!confirm(t("confirmReset"))) return;
     clearState();
     setState(DEFAULT_STATE);
     setView("intro");
-  }, []);
+  }, [t]);
 
   const handleNotesChange = useCallback(
     (notes: string) => {
@@ -143,17 +146,17 @@ export default function App() {
       <NotesPanel
         open={notesOpen}
         notes={currentProgress.notes}
-        dayTitle={`Day ${currentDay.id} — ${currentDay.title}`}
+        dayTitle={`${t("dayOf", { n: currentDay.id })} — ${tr(currentDay.title, locale)}`}
         onChange={handleNotesChange}
         onClose={() => setNotesOpen(false)}
       />
 
       <LoadingOverlay
         visible={!pyReady && !pyError}
-        title="Loading Python runtime..."
-        subtitle="Downloading Pyodide (~6MB). First load only."
+        title={t("loadingPython")}
+        subtitle={t("pyodideSize")}
       />
-      <LoadingOverlay visible={Boolean(pyError)} title="Failed to load Python" subtitle={pyError ?? ""} />
+      <LoadingOverlay visible={Boolean(pyError)} title={t("failedLoadPython")} subtitle={pyError ?? ""} />
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { NotesIcon, CloseIcon } from "@/lib/icons";
+import { useLocale } from "@/lib/locale-context";
 
 interface Props {
   open: boolean;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function NotesPanel({ open, notes, dayTitle, onChange, onClose }: Props) {
+  const { t } = useLocale();
   const [local, setLocal] = useState(notes);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function NotesPanel({ open, notes, dayTitle, onChange, onClose }:
         <div className="px-5 py-4 border-b border-border flex items-center justify-between">
           <div>
             <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-text-subtle">
-              <NotesIcon /> Your notes
+              <NotesIcon /> {t("yourNotes")}
             </div>
             <div className="text-[14px] font-semibold text-text mt-0.5">{dayTitle}</div>
           </div>
@@ -44,7 +46,7 @@ export default function NotesPanel({ open, notes, dayTitle, onChange, onClose }:
             type="button"
             onClick={onClose}
             className="w-8 h-8 rounded-md hover:bg-surface-soft text-text-muted flex items-center justify-center cursor-pointer transition-colors"
-            aria-label="Close notes"
+            aria-label={t("closeNotes")}
           >
             <CloseIcon />
           </button>
@@ -52,11 +54,11 @@ export default function NotesPanel({ open, notes, dayTitle, onChange, onClose }:
         <textarea
           value={local}
           onChange={(e) => handleChange(e.target.value)}
-          placeholder="Jot down what clicked, what confused you, questions to revisit, code patterns to remember..."
+          placeholder={t("notesPlaceholder")}
           className="flex-1 w-full px-5 py-4 text-[14.5px] leading-relaxed bg-surface focus:outline-none resize-none font-mono"
         />
         <div className="px-5 py-3 border-t border-border text-[11.5px] text-text-subtle">
-          Saved automatically as you type.
+          {t("savedAutomatically")}
         </div>
       </aside>
     </>

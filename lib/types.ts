@@ -1,3 +1,5 @@
+import type { LocalizedText } from "./i18n";
+
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
 export type TestExpected =
@@ -40,26 +42,26 @@ export interface TeachStep {
   kind: "teach";
   id: string;
   from: "teacher";
-  text: string;
+  text: LocalizedText;
 }
 
 export interface DemoStep {
   kind: "demo";
   id: string;
   from: "teacher";
-  intro: string;
+  intro: LocalizedText;
   code: string;
-  note?: string;
+  note?: LocalizedText;
 }
 
 export interface ExerciseStep {
   kind: "exercise";
   id: string;
   from: "teacher";
-  prompt: string;
+  prompt: LocalizedText;
   starter: string;
   solution: string;
-  hint: string;
+  hint: LocalizedText;
   fnName?: string;
   tests?: TestCase[];
   skipAutoTest?: boolean;
@@ -70,35 +72,35 @@ export interface QuizMCStep {
   kind: "quiz_mc";
   id: string;
   from: "teacher";
-  question: string;
-  options: string[];
+  question: LocalizedText;
+  options: LocalizedText[];
   answer: number;
-  explanation: string;
+  explanation: LocalizedText;
 }
 
 export interface QuizTextStep {
   kind: "quiz_text";
   id: string;
   from: "teacher";
-  question: string;
+  question: LocalizedText;
   accept: string[];
-  explanation: string;
+  explanation: LocalizedText;
 }
 
 export interface RecallStep {
   kind: "recall";
   id: string;
   from: "teacher";
-  prompt: string;
-  guideline: string;
+  prompt: LocalizedText;
+  guideline: LocalizedText;
 }
 
 export interface CheckpointStep {
   kind: "checkpoint";
   id: string;
   from: "teacher";
-  title: string;
-  body: string;
+  title: LocalizedText;
+  body: LocalizedText;
 }
 
 export type LessonStep =
@@ -112,11 +114,11 @@ export type LessonStep =
 
 export interface Day {
   id: number;
-  title: string;
-  subtitle: string;
-  estimatedTime: string;
-  goals: string[];
-  youWillBuild: string;
+  title: LocalizedText;
+  subtitle: LocalizedText;
+  estimatedTime: LocalizedText;
+  goals: LocalizedText[];
+  youWillBuild: LocalizedText;
   steps: LessonStep[];
   finalTest: LessonStep[];
 }

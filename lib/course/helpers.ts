@@ -1,3 +1,4 @@
+import type { LocalizedText } from "../i18n";
 import type {
   CheckpointStep,
   DemoStep,
@@ -9,20 +10,25 @@ import type {
   TestCase,
 } from "../types";
 
-export function teach(id: string, text: string): TeachStep {
+export function teach(id: string, text: LocalizedText): TeachStep {
   return { kind: "teach", id, from: "teacher", text };
 }
 
-export function demo(id: string, intro: string, code: string, note?: string): DemoStep {
+export function demo(
+  id: string,
+  intro: LocalizedText,
+  code: string,
+  note?: LocalizedText,
+): DemoStep {
   return { kind: "demo", id, from: "teacher", intro, code, note };
 }
 
 export function exercise(
   id: string,
-  prompt: string,
+  prompt: LocalizedText,
   starter: string,
   solution: string,
-  hint: string,
+  hint: LocalizedText,
   tests?: TestCase[],
   opts: { fnName?: string; skipAutoTest?: boolean } = {},
 ): ExerciseStep {
@@ -41,27 +47,31 @@ export function exercise(
 
 export function quizMC(
   id: string,
-  question: string,
-  options: string[],
+  question: LocalizedText,
+  options: LocalizedText[],
   answer: number,
-  explanation: string,
+  explanation: LocalizedText,
 ): QuizMCStep {
   return { kind: "quiz_mc", id, from: "teacher", question, options, answer, explanation };
 }
 
 export function quizText(
   id: string,
-  question: string,
+  question: LocalizedText,
   accept: string[],
-  explanation: string,
+  explanation: LocalizedText,
 ): QuizTextStep {
   return { kind: "quiz_text", id, from: "teacher", question, accept, explanation };
 }
 
-export function recall(id: string, prompt: string, guideline: string): RecallStep {
+export function recall(id: string, prompt: LocalizedText, guideline: LocalizedText): RecallStep {
   return { kind: "recall", id, from: "teacher", prompt, guideline };
 }
 
-export function checkpoint(id: string, title: string, body: string): CheckpointStep {
+export function checkpoint(
+  id: string,
+  title: LocalizedText,
+  body: LocalizedText,
+): CheckpointStep {
   return { kind: "checkpoint", id, from: "teacher", title, body };
 }

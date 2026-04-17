@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import ChatBubble from "../ChatBubble";
+import { useLocale } from "@/lib/locale-context";
+import { tr } from "@/lib/i18n";
 import type { QuizTextStep } from "@/lib/types";
 
 interface Props {
@@ -17,6 +19,7 @@ function normalize(s: string): string {
 }
 
 export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer, onComplete }: Props) {
+  const { locale, t } = useLocale();
   const [value, setValue] = useState(savedAnswer ?? "");
   const [submitted, setSubmitted] = useState(Boolean(savedAnswer));
 
@@ -35,11 +38,11 @@ export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer
       <div className="bg-surface border border-border rounded-2xl rounded-tl-sm shadow-soft overflow-hidden">
         <div className="px-4 py-3 border-b border-border">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-text-subtle mb-1.5">
-            Type your answer
+            {t("typeYourAnswer")}
           </div>
           <div
             className="text-[14.5px] leading-relaxed prose-concept"
-            dangerouslySetInnerHTML={{ __html: step.question }}
+            dangerouslySetInnerHTML={{ __html: tr(step.question, locale) }}
           />
         </div>
         <div className="p-3 flex items-center gap-2">
@@ -48,10 +51,14 @@ export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !submitted) submit();
+              if (e.key === "Enter" && !submitted) {
+                e.preventDefault();
+                e.stopPropagation();
+                submit();
+              }
             }}
             disabled={submitted}
-            placeholder="Your answer..."
+            placeholder={t("yourAnswerPlaceholder")}
             className="flex-1 px-3 py-2 rounded-lg border border-border bg-surface text-[14px] focus:outline-none focus:border-primary disabled:bg-surface-soft"
           />
           {!submitted && (
@@ -61,7 +68,7 @@ export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer
               disabled={!value.trim()}
               className="px-4 py-2 rounded-md text-[13px] font-semibold bg-primary text-white hover:bg-primary-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
-              Submit
+              {t("submit")}
             </button>
           )}
         </div>
@@ -70,9 +77,9 @@ export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer
             className={`px-4 py-3 border-t border-border text-[13.5px] leading-relaxed ${ok ? "bg-success-soft/50" : "bg-warning-soft/50"}`}
           >
             <span className="font-semibold mr-1">
-              {ok ? "Correct —" : `Expected something like "${step.accept[0]}" —`}
+              {ok ? t("correctTag") : t("expectedLike", { answer: step.accept[0] })}
             </span>
-            <span dangerouslySetInnerHTML={{ __html: step.explanation }} />
+            <span dangerouslySetInnerHTML={{ __html: tr(step.explanation, locale) }} />
             {!ok && (
               <div className="mt-2">
                 <button
@@ -83,7 +90,7 @@ export default function QuizTextBubble({ step, savedAnswer, isComplete, onAnswer
                   }}
                   className="text-primary hover:text-primary-hover text-[13px] font-semibold cursor-pointer"
                 >
-                  Try again
+                  {t("tryAgain")}
                 </button>
               </div>
             )}

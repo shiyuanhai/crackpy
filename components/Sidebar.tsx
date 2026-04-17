@@ -1,6 +1,9 @@
 "use client";
 
 import { CheckIcon, PyLogo } from "@/lib/icons";
+import { useLocale } from "@/lib/locale-context";
+import { tr } from "@/lib/i18n";
+import LanguageSwitcher from "./LanguageSwitcher";
 import type { Day, AppState } from "@/lib/types";
 
 interface SidebarProps {
@@ -12,6 +15,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ course, currentDay, state, onSelect, onReset }: SidebarProps) {
+  const { locale, t } = useLocale();
   const total = course.length;
   const done = course.filter((d) => state.progress[d.id]?.testPassed).length;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -22,13 +26,20 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-indigo-400 flex items-center justify-center text-white shrink-0">
           <PyLogo />
         </div>
-        <div className="text-[17px] font-bold tracking-tight">CrackPy</div>
+        <div className="text-[17px] font-bold tracking-tight">{t("appName")}</div>
       </div>
-      <div className="text-[12px] text-text-subtle ml-[42px] -mt-1">14-day interview prep</div>
+      <div className="text-[12px] text-text-subtle ml-[42px] -mt-1">{t("appTagline")}</div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-text-subtle">
+          {t("language")}
+        </span>
+        <LanguageSwitcher />
+      </div>
 
       <div className="bg-surface-soft border border-border rounded-lg p-3.5 my-6">
         <div className="flex justify-between items-center text-[12px] text-text-muted mb-2 uppercase tracking-wider font-semibold">
-          <span>Days complete</span>
+          <span>{t("daysComplete")}</span>
           <span>
             {done}/{total}
           </span>
@@ -42,7 +53,7 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
       </div>
 
       <div className="text-[11px] font-semibold text-text-subtle uppercase tracking-widest mx-2 mb-2">
-        14-day plan
+        {t("fourteenDayPlan")}
       </div>
       <ul className="flex flex-col gap-0.5 flex-1 list-none p-0 m-0">
         {course.map((day) => {
@@ -74,9 +85,12 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
                 >
                   {complete ? <CheckIcon /> : day.id}
                 </span>
-                <span className="flex-1 truncate">{day.title}</span>
+                <span className="flex-1 truncate">{tr(day.title, locale)}</span>
                 {inProgress && !active && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-label="In progress" />
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-primary shrink-0"
+                    aria-label={t("inProgress")}
+                  />
                 )}
               </button>
             </li>
@@ -85,14 +99,14 @@ export default function Sidebar({ course, currentDay, state, onSelect, onReset }
       </ul>
 
       <div className="pt-4 mt-4 border-t border-border text-[12px] text-text-subtle flex justify-between items-center">
-        <span>Runs in your browser</span>
+        <span>{t("runsInBrowser")}</span>
         <button
           type="button"
           onClick={onReset}
           className="px-2 py-1 rounded text-text-muted hover:bg-surface-soft hover:text-danger transition-colors text-[12px] font-medium cursor-pointer"
-          title="Reset all progress"
+          title={t("reset")}
         >
-          Reset
+          {t("reset")}
         </button>
       </div>
     </aside>
